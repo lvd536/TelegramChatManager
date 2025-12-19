@@ -7,12 +7,12 @@ export const start = async (ctx: MyContext) => {
         return ctx.reply("User info is not availbale");
     }
 
-    const { id, first_name, username } = ctx.from;
+    const { id: telegramId, first_name: firstName, username } = ctx.from;
 
     try {
         const keyboard = new InlineKeyboard().text("Меню", "menu");
 
-        const existingUser = await User.findOne({ telegramId: id });
+        const existingUser = await User.findOne({ telegramId });
         if (existingUser) {
             return ctx.reply("Вы уже зарегистрированы", {
                 reply_markup: keyboard,
@@ -20,8 +20,8 @@ export const start = async (ctx: MyContext) => {
         }
 
         const newUser = new User({
-            telegramId: id,
-            firstName: first_name,
+            telegramId,
+            firstName,
             username,
             messages: 0,
             textMessages: 0,
@@ -29,6 +29,7 @@ export const start = async (ctx: MyContext) => {
             videoMessages: 0,
             audioMessages: 0,
             geoMessages: 0,
+            otherMessages: 0,
         });
         newUser.save();
 
