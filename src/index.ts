@@ -4,9 +4,9 @@ import { hydrate } from "@grammyjs/hydrate";
 import mongoose from "mongoose";
 import { MyContext } from "./types.js";
 import { start } from "./commands/start.js";
-import { User } from "./models/User.js";
 import { handleMessage } from "./handlers/messageHandler.js";
 import { profile } from "./commands/profile.js";
+import { top } from "./commands/top.js";
 
 const BOT_API_KEY = process.env.BOT_TOKEN;
 if (!BOT_API_KEY) {
@@ -20,6 +20,8 @@ bot.use(hydrate());
 bot.command("start", start);
 
 bot.command("profile", profile);
+
+bot.command("top", top);
 
 bot.callbackQuery("menu", (ctx) => {
     ctx.answerCallbackQuery();

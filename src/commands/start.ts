@@ -29,6 +29,12 @@ export const start = async (ctx: MyContext) => {
             videoMessages: 0,
             audioMessages: 0,
             geoMessages: 0,
+            documentMessages: 0,
+            animationMessages: 0,
+            stickerMessages: 0,
+            videoNoteMessages: 0,
+            voiceMessages: 0,
+            pollMessages: 0,
             otherMessages: 0,
         });
         newUser.save();

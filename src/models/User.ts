@@ -10,6 +10,12 @@ export interface IUser extends Document {
     videoMessages: number;
     audioMessages: number;
     geoMessages: number;
+    documentMessages: number;
+    animationMessages: number;
+    stickerMessages: number;
+    videoNoteMessages: number;
+    voiceMessages: number;
+    pollMessages: number;
     otherMessages: number;
     createdAt: Date;
 }
@@ -46,6 +52,30 @@ const userSchema = new Schema<IUser>(
         geoMessages: {
             type: Number,
             required: [true, "geoMessages count is required"],
+        },
+        documentMessages: {
+            type: Number,
+            required: [true, "documentMessages count is required"],
+        },
+        animationMessages: {
+            type: Number,
+            required: [true, "animationMessages count is required"],
+        },
+        stickerMessages: {
+            type: Number,
+            required: [true, "stickerMessages count is required"],
+        },
+        videoNoteMessages: {
+            type: Number,
+            required: [true, "videoNoteMessages count is required"],
+        },
+        voiceMessages: {
+            type: Number,
+            required: [true, "voiceMessages count is required"],
+        },
+        pollMessages: {
+            type: Number,
+            required: [true, "pollMessages count is required"],
         },
         otherMessages: {
             type: Number,

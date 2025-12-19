@@ -28,6 +28,12 @@ export const profile = async (ctx: MyContext) => {
 ├ 🎥 <b>Видео:</b> ${user.videoMessages}
 ├ 🎧 <b>Аудио:</b> ${user.audioMessages}
 ├ 📍 <b>Геолокация:</b> ${user.geoMessages}
+├ 📄 <b>Документы:</b> ${user.documentMessages}
+├ 🎞 <b>Анимация:</b> ${user.animationMessages}
+├ 🎨 <b>Стикеры:</b> ${user.stickerMessages}
+├ 🎤 <b>Голосовые сообщения:</b> ${user.voiceMessages}
+├ 🎙 <b>Кружки:</b> ${user.videoNoteMessages}
+├ 📊 <b>Опросы:</b> ${user.pollMessages}
 └ 📦 <b>Другое:</b> ${user.otherMessages}
 
 <b>🤖 Отслеживается ботом с:</b>
