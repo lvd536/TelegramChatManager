@@ -22,69 +22,27 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
     {
-        telegramId: {
-            type: Number,
-            required: [true, "Telegram ID is required"],
-            unique: true,
-        },
-        firstName: { type: String },
-        username: { type: String },
-        messages: {
-            type: Number,
-            required: [true, "messages count is required"],
-        },
-        textMessages: {
-            type: Number,
-            required: [true, "textMessages count is required"],
-        },
-        imageMessages: {
-            type: Number,
-            required: [true, "imageMessages count is required"],
-        },
-        videoMessages: {
-            type: Number,
-            required: [true, "videoMessages count is required"],
-        },
-        audioMessages: {
-            type: Number,
-            required: [true, "audioMessages count is required"],
-        },
-        geoMessages: {
-            type: Number,
-            required: [true, "geoMessages count is required"],
-        },
-        documentMessages: {
-            type: Number,
-            required: [true, "documentMessages count is required"],
-        },
-        animationMessages: {
-            type: Number,
-            required: [true, "animationMessages count is required"],
-        },
-        stickerMessages: {
-            type: Number,
-            required: [true, "stickerMessages count is required"],
-        },
-        videoNoteMessages: {
-            type: Number,
-            required: [true, "videoNoteMessages count is required"],
-        },
-        voiceMessages: {
-            type: Number,
-            required: [true, "voiceMessages count is required"],
-        },
-        pollMessages: {
-            type: Number,
-            required: [true, "pollMessages count is required"],
-        },
-        otherMessages: {
-            type: Number,
-            required: [true, "geoMessages count is required"],
-        },
+        telegramId: { type: Number, required: true, unique: true },
+
+        firstName: String,
+        username: String,
+
+        messages: { type: Number, default: 0 },
+        textMessages: { type: Number, default: 0 },
+        imageMessages: { type: Number, default: 0 },
+        videoMessages: { type: Number, default: 0 },
+        audioMessages: { type: Number, default: 0 },
+        geoMessages: { type: Number, default: 0 },
+
+        documentMessages: { type: Number, default: 0 },
+        animationMessages: { type: Number, default: 0 },
+        stickerMessages: { type: Number, default: 0 },
+        videoNoteMessages: { type: Number, default: 0 },
+        voiceMessages: { type: Number, default: 0 },
+        pollMessages: { type: Number, default: 0 },
+        otherMessages: { type: Number, default: 0 },
     },
-    {
-        timestamps: true,
-    }
+    { timestamps: true }
 );
 
 export const User = model<IUser>("User", userSchema);
