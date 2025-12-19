@@ -15,25 +15,33 @@ export const profile = async (ctx: MyContext) => {
     }
     try {
         const keyboard = new InlineKeyboard().text("Меню", "menu");
-        const profile = `Имя: ${user.firstName}\nUsername: ${
-            user.username
-        }\nСообщения: ${user.messages}\nТекстовые сообщения: ${
-            user.textMessages
-        }\nИзображения: ${user.imageMessages}\nВидео: ${
-            user.videoMessages
-        }\nАудио: ${user.audioMessages}\nГеолокация: ${
-            user.geoMessages
-        }\nДругие сообщения: ${
-            user.otherMessages
-        }\nОтслеживается ботом c: ${user.createdAt.toLocaleDateString("ru-RU", {
+        const profile = `
+<b>👤 Профиль пользователя</b>
+
+<b>Имя:</b> ${user.firstName}
+<b>Username:</b> ${user.username ? `@${user.username}` : "—"}
+
+<b>📊 Статистика сообщений</b>
+├ 💬 <b>Всего:</b> ${user.messages}
+├ ✍️ <b>Текст:</b> ${user.textMessages}
+├ 🖼 <b>Изображения:</b> ${user.imageMessages}
+├ 🎥 <b>Видео:</b> ${user.videoMessages}
+├ 🎧 <b>Аудио:</b> ${user.audioMessages}
+├ 📍 <b>Геолокация:</b> ${user.geoMessages}
+└ 📦 <b>Другое:</b> ${user.otherMessages}
+
+<b>🤖 Отслеживается ботом с:</b>
+<code>${user.createdAt.toLocaleDateString("ru-RU", {
             timeZone: "Europe/Samara",
             year: "2-digit",
             month: "2-digit",
             day: "2-digit",
-        })}
-        `;
+        })}</code>
+`;
+
         return ctx.reply(profile, {
             reply_markup: keyboard,
+            parse_mode: "HTML",
         });
     } catch (error) {
         console.error("Ошибка при регистрации пользователя", error);
