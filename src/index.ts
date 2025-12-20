@@ -10,11 +10,21 @@ import { top } from "./commands/Top/top.js";
 import { topCallback } from "./commands/Top/topCallback.js";
 import { topMenuCallback } from "./commands/Top/topMenuCallback.js";
 import { profileMenuCallback } from "./commands/Profile/profileMenuCallback.js";
+import ffmpeg from "fluent-ffmpeg";
+import ffmpegPath from "ffmpeg-static";
 
 const BOT_API_KEY = process.env.BOT_TOKEN;
 if (!BOT_API_KEY) {
     throw new Error("BOT_API_KEY is not defined");
 }
+
+if (!ffmpegPath) {
+    throw new Error(
+        "ffmpegPath is not defined. Please ensure ffmpeg-static is installed."
+    );
+}
+
+ffmpeg.setFfmpegPath(ffmpegPath as unknown as string);
 
 const bot = new Bot<MyContext>(BOT_API_KEY);
 

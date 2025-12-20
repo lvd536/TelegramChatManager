@@ -1,5 +1,6 @@
 import { User } from "../models/User.js";
 import { MyContext } from "../types.js";
+import { handleVoiceMessage } from "./voiceMessageHandler.js";
 
 export const handleMessage = async (ctx: MyContext) => {
     if (!ctx.from || !ctx.message) {
@@ -29,8 +30,10 @@ export const handleMessage = async (ctx: MyContext) => {
     } else if (ctx.message.sticker) {
         await user.updateOne({ $inc: { messages: 1, stickerMessages: 1 } });
     } else if (ctx.message.video_note) {
+        handleVoiceMessage(ctx);
         await user.updateOne({ $inc: { messages: 1, videoNoteMessages: 1 } });
     } else if (ctx.message.voice) {
+        handleVoiceMessage(ctx);
         await user.updateOne({ $inc: { messages: 1, voiceMessages: 1 } });
     } else if (ctx.message.poll) {
         await user.updateOne({ $inc: { messages: 1, pollMessages: 1 } });
