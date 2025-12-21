@@ -1,8 +1,9 @@
 import { InlineKeyboard } from "grammy";
 import { TOP_CATEGORIES, TopCategory } from "../../constants/topCategories.js";
 import { db } from "../../db/client.js";
-import { userChats, users } from "../../db/schema.js";
-import { desc } from "drizzle-orm";
+import { chats, userChats, users } from "../../db/schema.js";
+import { desc, eq } from "drizzle-orm";
+import { MyContext } from "../../types.js";
 
 const LIMIT = 10;
 
@@ -38,11 +39,16 @@ const orderColumnMap: Record<TopCategory, any> = {
     otherMessages: userChats.otherMessages,
 };
 
-export async function renderTop(category: TopCategory) {
+export async function renderTop(category: TopCategory, ctx: MyContext) {
     const column = orderColumnMap[category];
+    const chatId = await db
+        .select()
+        .from(chats)
+        .where(eq(chats.telegramId, ctx.chatId || 1));
     const topUsers = await db
         .select()
         .from(userChats)
+        .where(eq(userChats.chatId, chatId[0].id || 1))
         .orderBy(desc(column))
         .limit(LIMIT);
 

@@ -14,7 +14,7 @@ export const topCallback = async (ctx: MyContext) => {
         return ctx.answerCallbackQuery("Неизвестная категория");
     }
 
-    const { text, keyboard } = await renderTop(category as any);
+    const { text, keyboard } = await renderTop(category as any, ctx);
 
     await ctx.callbackQuery?.message?.editText(text, {
         parse_mode: "HTML",

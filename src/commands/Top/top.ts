@@ -2,7 +2,7 @@ import { MyContext } from "../../types.js";
 import { renderTop } from "./renderTop.js";
 
 export const top = async (ctx: MyContext) => {
-    const { text, keyboard } = await renderTop("messages");
+    const { text, keyboard } = await renderTop("messages", ctx);
 
     await ctx.reply(text, {
         parse_mode: "HTML",
