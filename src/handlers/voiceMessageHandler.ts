@@ -1,7 +1,7 @@
 import { MyContext } from "../types.js";
 import { exec } from "child_process";
 import fs from "fs";
-import ffmpeg from "fluent-ffmpeg";
+import Groq from "groq-sdk";
 import path from "path";
 
 export const handleVoiceMessage = async (ctx: MyContext) => {
@@ -46,28 +46,20 @@ export const handleVoiceMessage = async (ctx: MyContext) => {
                 (error) => (error ? reject(error) : resolve())
             );
         });
-
-        const command = `"./whisper.cpp/build/bin/whisper-cli" -m "./whisper.cpp/models/ggml-base.bin" -f "${wavPath}" -l ru -nt`;
-
-        exec(command, async (error, stdout, stderr) => {
-            if (error) {
-                console.error("Whisper stderr:", stderr);
-                await message.editText("❌ Ошибка распознавания речи");
-                return;
-            }
-
-            const text = stdout.trim();
-            if (text.length === 0) {
-                await message.editText("⚠️ Не удалось распознать речь");
-            } else {
-                await message.editText(`📝 Распознанный текст:\n\n${text}`);
-            }
-
-            try {
-                fs.unlinkSync(oggPath);
-                fs.unlinkSync(wavPath);
-            } catch {}
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+        const transcription = await groq.audio.transcriptions.create({
+            file: fs.createReadStream(oggPath),
+            model: "whisper-large-v3",
+            language: "ru",
+            response_format: "json",
         });
+
+        await message.editText(`📝 Текст:\n${transcription.text}`);
+
+        try {
+            fs.unlinkSync(oggPath);
+            fs.unlinkSync(wavPath);
+        } catch {}
     } catch (err) {
         console.error(err);
         await message.editText("❌ Ошибка обработки сообщения");
