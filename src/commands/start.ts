@@ -1,9 +1,9 @@
 import { InlineKeyboard } from "grammy";
-import { User } from "../models/User.js";
 import { MyContext } from "../types.js";
+import { ensureUserInChat } from "../db/baseMethods.js";
 
 export const start = async (ctx: MyContext) => {
-    if (!ctx.from) {
+    if (!ctx.from || !ctx.chatId) {
         return ctx.reply("User info is not availbale");
     }
 
@@ -12,34 +12,15 @@ export const start = async (ctx: MyContext) => {
     try {
         const keyboard = new InlineKeyboard().text("Меню", "menu");
 
-        const existingUser = await User.findOne({ telegramId });
-        if (existingUser) {
-            return ctx.reply("Вы уже зарегистрированы", {
-                reply_markup: keyboard,
-            });
-        }
-
-        const newUser = new User({
+        await ensureUserInChat(
             telegramId,
+            ctx.chatId,
             firstName,
             username,
-            messages: 0,
-            textMessages: 0,
-            imageMessages: 0,
-            videoMessages: 0,
-            audioMessages: 0,
-            geoMessages: 0,
-            documentMessages: 0,
-            animationMessages: 0,
-            stickerMessages: 0,
-            videoNoteMessages: 0,
-            voiceMessages: 0,
-            pollMessages: 0,
-            otherMessages: 0,
-        });
-        newUser.save();
+            ctx.chat?.title
+        );
 
-        return ctx.reply("Вы успешно зарегистрированы!", {
+        return ctx.reply("Вы зарегистрированы!", {
             reply_markup: keyboard,
         });
     } catch (error) {

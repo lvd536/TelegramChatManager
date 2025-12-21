@@ -1,6 +1,8 @@
 import { InlineKeyboard } from "grammy";
-import { User } from "../../models/User.js";
 import { TOP_CATEGORIES, TopCategory } from "../../constants/topCategories.js";
+import { db } from "../../db/client.js";
+import { userChats, users } from "../../db/schema.js";
+import { desc } from "drizzle-orm";
 
 const LIMIT = 10;
 
@@ -20,9 +22,28 @@ function buildKeyboardByRows(
     return keyboard;
 }
 
+const orderColumnMap: Record<TopCategory, any> = {
+    messages: userChats.messages,
+    textMessages: userChats.textMessages,
+    imageMessages: userChats.imageMessages,
+    videoMessages: userChats.videoMessages,
+    audioMessages: userChats.audioMessages,
+    voiceMessages: userChats.voiceMessages,
+    videoNoteMessages: userChats.videoNoteMessages,
+    stickerMessages: userChats.stickerMessages,
+    animationMessages: userChats.animationMessages,
+    documentMessages: userChats.documentMessages,
+    pollMessages: userChats.pollMessages,
+    geoMessages: userChats.geoMessages,
+    otherMessages: userChats.otherMessages,
+};
+
 export async function renderTop(category: TopCategory) {
-    const users = await User.find()
-        .sort({ [category]: -1 })
+    const column = orderColumnMap[category];
+    const topUsers = await db
+        .select()
+        .from(userChats)
+        .orderBy(desc(column))
         .limit(LIMIT);
 
     const title = TOP_CATEGORIES[category];
@@ -30,7 +51,7 @@ export async function renderTop(category: TopCategory) {
     const text = `
 <b>🏆 Топ 10 — ${title}</b>
 
-${users
+${topUsers
     .map(
         (u, i) =>
             `<b>${i + 1}.</b> ${u.firstName || "Без имени"} — <b>${

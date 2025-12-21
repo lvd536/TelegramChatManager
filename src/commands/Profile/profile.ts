@@ -1,14 +1,19 @@
 import { InlineKeyboard } from "grammy";
-import { User } from "../../models/User.js";
 import { MyContext } from "../../types.js";
+import { db } from "../../db/client.js";
+import { userChats } from "../../db/schema.js";
+import { and, eq } from "drizzle-orm";
 
 export const profile = async (ctx: MyContext) => {
-    if (!ctx.from) {
+    if (!ctx.from || !ctx.chatId) {
         return ctx.reply("User info is not availbale");
     }
 
-    const user = await User.findOne({ telegramId: ctx.from.id });
-    if (!user) {
+    const user = await db
+        .select()
+        .from(userChats)
+        .where(eq(userChats.compound, `${ctx.from.id}:${ctx.chatId}`));
+    if (!user[0]) {
         return ctx.reply(
             "Вы не зарегистрированы. Пожалуйста, введите /start для регистрации."
         );
@@ -18,26 +23,26 @@ export const profile = async (ctx: MyContext) => {
         const profile = `
 <b>👤 Профиль пользователя</b>
 
-<b>Имя:</b> ${user.firstName}
-<b>Username:</b> ${user.username ? `@${user.username}` : "—"}
+<b>Имя:</b> ${user[0].firstName}
+<b>Username:</b> ${user[0].username ? `@${user[0].username}` : "—"}
 
 <b>📊 Статистика сообщений</b>
-├ 💬 <b>Всего:</b> ${user.messages}
-├ ✍️ <b>Текст:</b> ${user.textMessages}
-├ 🖼 <b>Изображения:</b> ${user.imageMessages}
-├ 🎥 <b>Видео:</b> ${user.videoMessages}
-├ 🎧 <b>Аудио:</b> ${user.audioMessages}
-├ 📍 <b>Геолокация:</b> ${user.geoMessages}
-├ 📄 <b>Документы:</b> ${user.documentMessages}
-├ 🎞 <b>Анимация:</b> ${user.animationMessages}
-├ 🎨 <b>Стикеры:</b> ${user.stickerMessages}
-├ 🎤 <b>Голосовые сообщения:</b> ${user.voiceMessages}
-├ 🎙 <b>Кружки:</b> ${user.videoNoteMessages}
-├ 📊 <b>Опросы:</b> ${user.pollMessages}
-└ 📦 <b>Другое:</b> ${user.otherMessages}
+├ 💬 <b>Всего:</b> ${user[0].messages}
+├ ✍️ <b>Текст:</b> ${user[0].textMessages}
+├ 🖼 <b>Изображения:</b> ${user[0].imageMessages}
+├ 🎥 <b>Видео:</b> ${user[0].videoMessages}
+├ 🎧 <b>Аудио:</b> ${user[0].audioMessages}
+├ 📍 <b>Геолокация:</b> ${user[0].geoMessages}
+├ 📄 <b>Документы:</b> ${user[0].documentMessages}
+├ 🎞 <b>Анимация:</b> ${user[0].animationMessages}
+├ 🎨 <b>Стикеры:</b> ${user[0].stickerMessages}
+├ 🎤 <b>Голосовые сообщения:</b> ${user[0].voiceMessages}
+├ 🎙 <b>Кружки:</b> ${user[0].videoNoteMessages}
+├ 📊 <b>Опросы:</b> ${user[0].pollMessages}
+└ 📦 <b>Другое:</b> ${user[0].otherMessages}
 
 <b>🤖 Отслеживается ботом с:</b>
-<code>${user.createdAt.toLocaleDateString("ru-RU", {
+<code>${user[0].createdAt.toLocaleDateString("ru-RU", {
             timeZone: "Europe/Samara",
             year: "2-digit",
             month: "2-digit",

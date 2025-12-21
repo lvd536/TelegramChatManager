@@ -1,4 +1,3 @@
-import { User } from "../models/User.js";
 import { MyContext } from "../types.js";
 import { exec } from "child_process";
 import fs from "fs";
@@ -15,12 +14,6 @@ export const handleVoiceMessage = async (ctx: MyContext) => {
     const message = await ctx.reply(
         "🔄 Идет распознавание голосового сообщения...\nЭто может занять некоторое время."
     );
-    const user = await User.findOne({ telegramId: ctx.from.id });
-    if (!user) {
-        return ctx.reply(
-            "Вы не зарегистрированы. Пожалуйста, введите /start для регистрации."
-        );
-    }
 
     try {
         const fileId =

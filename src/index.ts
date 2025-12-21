@@ -1,7 +1,6 @@
 import "dotenv/config";
 import { Bot, GrammyError, HttpError, InlineKeyboard } from "grammy";
 import { hydrate } from "@grammyjs/hydrate";
-import mongoose from "mongoose";
 import { MyContext } from "./types.js";
 import { start } from "./commands/start.js";
 import { handleMessage } from "./handlers/messageHandler.js";
@@ -68,12 +67,7 @@ bot.catch((err) => {
 });
 
 async function startBot() {
-    const MONGODB_URI = process.env.MONGODB_URI;
-    if (!MONGODB_URI) {
-        throw new Error("MONGODB_URI is not defined");
-    }
     try {
-        await mongoose.connect(MONGODB_URI);
         bot.start();
         console.log("MongoDB connected & bot started");
     } catch (error) {
