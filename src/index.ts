@@ -12,6 +12,7 @@ import { profileMenuCallback } from "./commands/Profile/profileMenuCallback.js";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
 import { weather } from "./commands/Weather/weather.js";
+import { weatherMenuCallback } from "./commands/Weather/weatherMenuCallback.js";
 
 const BOT_API_KEY = process.env.BOT_TOKEN;
 if (!BOT_API_KEY) {
@@ -33,6 +34,7 @@ bot.use(hydrate());
 bot.command("start", start);
 
 bot.command("weather", weather);
+bot.callbackQuery("weather", weatherMenuCallback);
 
 bot.command("profile", profile);
 
@@ -45,7 +47,8 @@ bot.callbackQuery("menu", (ctx) => {
     ctx.callbackQuery.message?.editText("Вы в главном меню.\n", {
         reply_markup: new InlineKeyboard()
             .text("📊 Топ", "top")
-            .text("👤 Профиль", "profile"),
+            .text("👤 Профиль", "profile")
+            .text("🌤 Погода", "weather"),
     });
 });
 

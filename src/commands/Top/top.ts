@@ -4,7 +4,7 @@ import { renderTop } from "./renderTop.js";
 export const top = async (ctx: MyContext) => {
     const { text, keyboard } = await renderTop("messages", ctx);
 
-    await ctx.reply(text, {
+    ctx.reply(text, {
         parse_mode: "HTML",
         reply_markup: keyboard,
     });

@@ -1,0 +1,69 @@
+import { InlineKeyboard } from "grammy";
+import { MyContext, WeatherApiResponse } from "../../types.js";
+import { db } from "../../db/client.js";
+import { userChats } from "../../db/schema.js";
+import { eq } from "drizzle-orm";
+
+export const renderWeather = async (ctx: MyContext) => {
+    const keyboard = new InlineKeyboard().text("Меню", "menu");
+
+    if (!ctx.from || !ctx.chatId) {
+        return {
+            weatherMessage: "User info is not availbale",
+            keyboard,
+        };
+    }
+
+    const user = await db
+        .select()
+        .from(userChats)
+        .where(eq(userChats.compound, `${ctx.from.id}:${ctx.chatId}`));
+    if (!user[0]) {
+        return {
+            weatherMessage:
+                "Вы не зарегистрированы. Пожалуйста, введите /start для регистрации.",
+            keyboard,
+        };
+    }
+    try {
+        const weather: WeatherApiResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${process.env.WEATHER_CITY}&appid=${process.env.WEATHER_API_KEY}&lang=ru&units=metric`
+        ).then((resp) => resp.json());
+
+        const weatherMessage = `<b>🌤️ Погода в ${
+            process.env.WEATHER_CITY
+        }</b>\n<b>🌍 Облачность:</b> ${
+            weather.weather[0].description
+        }\n<b>🌡️ Температура:</b> ${
+            weather.main.temp
+        }°C\n<b>💧 Влажность:</b> ${
+            weather.main.humidity
+        }%\n<b>🌬️ Скорость ветра:</b> ${
+            weather.wind?.speed
+        } м/с\n<b>🌅 Восход:</b> ${new Date(
+            weather.sys.sunrise * 1000
+        ).toLocaleDateString("ru-RU", {
+            timeZone: "Europe/Samara",
+            hour: "2-digit",
+            minute: "2-digit",
+        })}\n<b>🌇 Закат:</b> ${new Date(
+            weather.sys.sunset * 1000
+        ).toLocaleDateString("ru-RU", {
+            timeZone: "Europe/Samara",
+            hour: "2-digit",
+            minute: "2-digit",
+        })}
+        `;
+
+        return {
+            weatherMessage,
+            keyboard,
+        };
+    } catch (error) {
+        console.error("Ошибка при регистрации пользователя", error);
+        return {
+            weatherMessage: "Произошла ошибка, попробуйте позже",
+            keyboard,
+        };
+    }
+};
