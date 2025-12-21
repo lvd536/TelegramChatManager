@@ -2,8 +2,6 @@ import {
     ensureUserInChat,
     incrementMessageCounters,
 } from "../db/baseMethods.js";
-import { db } from "../db/client.js";
-import { userChats } from "../db/schema.js";
 import { MyContext } from "../types.js";
 import { handleVoiceMessage } from "./voiceMessageHandler.js";
 

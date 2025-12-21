@@ -7,38 +7,6 @@ import { MyContext } from "../../types.js";
 
 const LIMIT = 10;
 
-function buildKeyboardByRows(
-    buttons: { text: string; callback_data: string }[],
-    perRow = 3
-) {
-    const keyboard = new InlineKeyboard();
-
-    for (let i = 0; i < buttons.length; i += perRow) {
-        const row = buttons.slice(i, i + perRow);
-        keyboard.row(
-            ...row.map((b) => InlineKeyboard.text(b.text, b.callback_data))
-        );
-    }
-
-    return keyboard;
-}
-
-const orderColumnMap: Record<TopCategory, any> = {
-    messages: userChats.messages,
-    textMessages: userChats.textMessages,
-    imageMessages: userChats.imageMessages,
-    videoMessages: userChats.videoMessages,
-    audioMessages: userChats.audioMessages,
-    voiceMessages: userChats.voiceMessages,
-    videoNoteMessages: userChats.videoNoteMessages,
-    stickerMessages: userChats.stickerMessages,
-    animationMessages: userChats.animationMessages,
-    documentMessages: userChats.documentMessages,
-    pollMessages: userChats.pollMessages,
-    geoMessages: userChats.geoMessages,
-    otherMessages: userChats.otherMessages,
-};
-
 export async function renderTop(category: TopCategory, ctx: MyContext) {
     const column = orderColumnMap[category];
     const chatId = await db
@@ -78,3 +46,35 @@ ${topUsers
 
     return { text, keyboard };
 }
+
+function buildKeyboardByRows(
+    buttons: { text: string; callback_data: string }[],
+    perRow = 3
+) {
+    const keyboard = new InlineKeyboard();
+
+    for (let i = 0; i < buttons.length; i += perRow) {
+        const row = buttons.slice(i, i + perRow);
+        keyboard.row(
+            ...row.map((b) => InlineKeyboard.text(b.text, b.callback_data))
+        );
+    }
+
+    return keyboard;
+}
+
+const orderColumnMap: Record<TopCategory, any> = {
+    messages: userChats.messages,
+    textMessages: userChats.textMessages,
+    imageMessages: userChats.imageMessages,
+    videoMessages: userChats.videoMessages,
+    audioMessages: userChats.audioMessages,
+    voiceMessages: userChats.voiceMessages,
+    videoNoteMessages: userChats.videoNoteMessages,
+    stickerMessages: userChats.stickerMessages,
+    animationMessages: userChats.animationMessages,
+    documentMessages: userChats.documentMessages,
+    pollMessages: userChats.pollMessages,
+    geoMessages: userChats.geoMessages,
+    otherMessages: userChats.otherMessages,
+};

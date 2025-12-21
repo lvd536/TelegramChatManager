@@ -2,7 +2,7 @@ import { InlineKeyboard } from "grammy";
 import { MyContext } from "../../types.js";
 import { db } from "../../db/client.js";
 import { userChats } from "../../db/schema.js";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const profile = async (ctx: MyContext) => {
     if (!ctx.from || !ctx.chatId) {

@@ -1,5 +1,4 @@
 import { MyContext } from "../../types.js";
-import { TOP_CATEGORIES } from "../../constants/topCategories.js";
 import { renderTop } from "./renderTop.js";
 
 export const topMenuCallback = async (ctx: MyContext) => {
