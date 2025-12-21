@@ -25,7 +25,7 @@ export const handleMessage = async (ctx: MyContext) => {
         );
     }
     if (ctx.message.voice || ctx.message.video_note) {
-        await handleVoiceMessage(ctx);
+        handleVoiceMessage(ctx);
     }
     await incrementMessageCounters(ctx, userChat);
 };
