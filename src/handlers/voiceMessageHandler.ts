@@ -3,6 +3,7 @@ import { exec } from "child_process";
 import fs from "fs";
 import Groq from "groq-sdk";
 import path from "path";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 export const handleVoiceMessage = async (ctx: MyContext) => {
     if (
@@ -46,7 +47,14 @@ export const handleVoiceMessage = async (ctx: MyContext) => {
                 (error) => (error ? reject(error) : resolve())
             );
         });
-        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+        const proxyUrl = "http://wE4LqfhQpV:6onsI6ig4M@194.31.73.34:52877";
+
+        const agent = new HttpsProxyAgent(proxyUrl);
+        const groq = new Groq({
+            apiKey: process.env.GROQ_API_KEY,
+            httpAgent: agent,
+        });
         const transcription = await groq.audio.transcriptions.create({
             file: fs.createReadStream(oggPath),
             model: "whisper-large-v3",
