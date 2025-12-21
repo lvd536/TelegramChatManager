@@ -11,6 +11,7 @@ import { topMenuCallback } from "./commands/Top/topMenuCallback.js";
 import { profileMenuCallback } from "./commands/Profile/profileMenuCallback.js";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
+import { weather } from "./commands/Weather/weather.js";
 
 const BOT_API_KEY = process.env.BOT_TOKEN;
 if (!BOT_API_KEY) {
@@ -30,6 +31,8 @@ const bot = new Bot<MyContext>(BOT_API_KEY);
 bot.use(hydrate());
 
 bot.command("start", start);
+
+bot.command("weather", weather);
 
 bot.command("profile", profile);
 
